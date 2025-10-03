@@ -5,7 +5,7 @@ My little pet-project and how I make beautiful shapes. You can find it on my [we
 - No dependencies (besides the Browser)
 - A description of the option hovered at the bottom
 
-### Changelog
+### Changelog and Links
 
 Version 1-3
 - Initial implementations of the concepts in Flash (Actionscript)
