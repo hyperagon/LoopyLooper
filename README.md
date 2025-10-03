@@ -2,12 +2,13 @@
 My little pet-project and how I make beautiful shapes. You can find it on my [website](https://hyperagon.github.io/projects/loopylooper/).
 
 ### Features
-- No dependencies (besides the Browser)
+- No dependencies (besides a Browser)
 - A description of the option hovered at the bottom
+- Lightweight
 
-### Changelog and Links
+### Changelog / Links
 
-Version 1-3
+Version 1 to 3
 - Initial implementations of the concepts in Flash (Actionscript)
 
 Version 4
