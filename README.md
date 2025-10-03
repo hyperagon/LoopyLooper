@@ -17,6 +17,6 @@ Version 4
 Version 5
 - Animate it using a *delay* slider
 
-Veraion 6
+Veraion 6 (Attempted to have an LLM assemble the parts, which it failed, thus the different GUI)
 - Export to PNG, SVG or RAWR
 - Include animations in RAWR
