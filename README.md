@@ -15,7 +15,7 @@ Version 4
 - Save as image (default Canvas option)
 
 Version 5
-- Animate it using delay
+- Animate it using a *delay* slider
 
 Veraion 6
 - Export to PNG, SVG or RAWR
