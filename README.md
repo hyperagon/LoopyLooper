@@ -18,6 +18,6 @@ Version 4
 [Version 5](https://hyperagon.github.io/projects/loopylooper5/)
 - Animate it using a *delay* slider
 
-[Veraion 6](https://hyperagon.github.io/projects/loopylooper6/) (Attempted to have an LLM assemble the parts, which it failed)
+[Veraion 6](https://hyperagon.github.io/projects/loopylooper6/) (Attempted to have an LLM assemble the parts)
 - Export to PNG, SVG or RAWR
 - Include animations in RAWR
