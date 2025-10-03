@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loopy Looper 6</title>
+    <style>
+/*
+Copyright 2016-2025 Hyperagon (https://hyperagon.github.io/)
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+For more information, visit https://www.gnu.org/licenses/agpl-3.0.en.html */
+body { padding: 0; margin: 0; color: #cccccc; background-color: #444444; }
+div#title { margin: 0 auto; padding: 0; text-align: center; }
+div#title h1 { margin: 0; padding: 1ex; }
+div#title a { text-decoration: none; }
+div#title a:link { color: #aaaaaa; }
+div#title a:visited { color: #aaaaaa; }po
+div#title a:hover { color: #ffffff; }
+div#title a:active { color: #ffffff; }
+div.menu { margin: 0 auto; padding: 0; text-align: center; }
+div.menu ul { padding: 0; list-style-type: none; }
+div.menu li { margin: 0 auto; margin-top: 3ex; margin-bottom: 3ex; padding: 0; }
+div.menu li:first-child { margin-top: 0; }
+div.menu li:last-child { margin-bottom: 0; }
+div.menu li a { display: inline; margin: 0; padding: 5px; border: 2px solid #aaaaaa; font-weight: bolder; text-decoration: none; border-radius: 1ex; }
+div.menu li a:link { color: #aaaaaa; background-color: #555555; }
+div.menu li a:visited { color: #aaaaaa; background-color: #555555; }
+div.menu li a:hover { color: #ffffff; background-color: #aaaaaa; }
+div.menu li a:active { color: #ffffff; background-color: #aaaaaa; }
+div.content { margin: 0 auto; padding: 0; text-align: center; }
+div.content .control-row { 
+    display: block; 
+    width: 100%; 
+    margin: 0 auto; 
+    padding: 1ex; 
+    margin-bottom: 0.5ex; 
+    text-align: center; 
+    background-color: #555555; 
+    border-radius: 1ex; 
+}
+div.content #canvas { border: 2px solid #aaaaaa; margin: 0 auto; padding: 0; text-align: center; border-radius: 1ex; }
+div.content p { margin: 0; }
+div.content #description-container { 
+    display: block; 
+    width: 100%; 
+    clear: both; 
+    margin-top: 1ex; 
+    background-color: #555555;
+    border-radius: 1ex;
+    padding: 1ex;
+}
+div.content #description { 
+    font-weight: bolder; 
+    display: block; 
+    width: 100%;
+}
+div.content input, div.content select, div.content textarea { border: 2px solid #aaaaaa; margin: 0 auto; padding: 2px; color: #ffffff; background-color: #777777; border-radius: 1ex; }
+
+/* Context Menu Styles */
+.context-menu {
+    position: absolute;
+    background-color: #555555;
+    border: 2px solid #aaaaaa;
+    border-radius: 5px;
+    padding: 5px 0;
+    display: none;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.context-menu-item {
+    padding: 8px 15px;
+    cursor: pointer;
+    color: #cccccc;
+}
+
+.context-menu-item:hover {
+    background-color: #777777;
+    color: #ffffff;
+}
+
+/* Export notification */
+.export-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #555555;
+    border: 2px solid #aaaaaa;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #ffffff;
+    display: none;
+    z-index: 1001;
+}
+    </style>
+</head>
+<body>
+    <div id="title">
+         <h2>Loopy Looper 6</h2>
+    </div>
+
+    <div class="content">
+        <canvas id="canvas" width="500" height="500">
+            This is a canvas element and, if you're seeing this then, your browser doesn't support it.
+        </canvas>
+        
+        <div class="control-row">
+            <form name="controls" id="controls1">
+                Step:<input type="number" name="step" min="1" max="360" value="216" onmouseover="updateDescription(1)" onmouseout="updateDescription(0)" onchange="updateValues()">
+                ,Detail:<input type="number" name="detail" min="1" max="100" value="10" onmouseover="updateDescription(2)" onmouseout="updateDescription(0)" onchange="updateValues()">
+                ,Maximum Radius:<input type="number" name="maxr" min="1" max="100" value="100" onmouseover="updateDescription(3)" onmouseout="updateDescription(0)" onchange="updateValues()">%
+                ,Minimum Radius:<input type="number" name="minr" min="0" max="100" value="0" onmouseover="updateDescription(4)" onmouseout="updateDescription(0)" onchange="updateValues()">%
+                ,Line Width:<input type="number" name="lw" min="1" max="100" value="20" onmouseover="updateDescription(5)" onmouseout="updateDescription(0)" onchange="updateValues()">
+            </form>
+        </div>
+        
+        <div class="control-row">
+            <form name="controls2" id="controls2">
+                Inner Color:<input type="text" name="ic" value="#ffff64" onmouseover="updateDescription(6)" onmouseout="updateDescription(0)" onchange="updateValues()">
+                ,Outter Color:<input type="text" name="oc" value="#ffc832" onmouseover="updateDescription(7)" onmouseout="updateDescription(0)" onchange="updateValues()">
+                ,Delay: <input type="number" name="delay" min="0" max="100" value="0" onmouseover="updateDescription(8)" onmouseout="updateDescription(0)" onchange="updateValues()">
+            </form>
+        </div>
+        
+        <div class="control-row">
+            <form name="controls3" id="controls3">
+                <input type="button" value="Restart" onclick="updateValues()" onmouseover="updateDescription(9)" onmouseout="updateDescription(0)">
+            </form>
+        </div>
+        
+        <div id="description-container">
+            <p id="description">Hold your mouse over a control to view its description.</p>
+        </div>
+    </div>
+
+    <!-- Custom Context Menu -->
+    <div id="contextMenu" class="context-menu">
+        <div class="context-menu-item" id="exportPNG">Export to PNG</div>
+        <div class="context-menu-item" id="exportSVG">Export to SVG</div>
+        <div class="context-menu-item" id="exportRAWR">Export to RAWR</div>
+    </div>
+
+    <!-- Export notification -->
+    <div id="exportNotification" class="export-notification">
+        Right-click and "Save image as..." to download
+    </div>
+
+    <script>
+/*
+Copyright 2016-2024 Hyperagon (https://hyperagon.github.io/)
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+For more informtion, visit . */
+const GLOBAL = {};
+const canvas = document.getElementById("canvas");
+let context = null;
+var step = 216.0;
+var detail = 10;
+var maxr = 100;
+var minr = 0;
+var lw = 20;
+var ic = "#ffff64";
+var oc = "#ffc832";
+var delay = 0;
+
+// Context menu functionality
+let contextMenu, exportPNG, exportSVG, exportRAWR, exportNotification;
+
+// Initialize context menu elements and event listeners
+function initContextMenu() {
+    contextMenu = document.getElementById('contextMenu');
+    exportPNG = document.getElementById('exportPNG');
+    exportSVG = document.getElementById('exportSVG');
+    exportRAWR = document.getElementById('exportRAWR');
+    exportNotification = document.getElementById('exportNotification');
+    
+    // Hide context menu when clicking elsewhere
+    document.addEventListener('click', () => {
+        contextMenu.style.display = 'none';
+    });
+
+    // Show custom context menu on canvas right-click
+    canvas.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        contextMenu.style.display = 'block';
+        contextMenu.style.left = `${e.pageX}px`;
+        contextMenu.style.top = `${e.pageY}px`;
+        return false;
+    });
+
+    // Export to PNG functionality
+    exportPNG.addEventListener('click', (e) => {
+        e.stopPropagation();
+        exportToPNG();
+        contextMenu.style.display = 'none';
+        return false;
+    });
+
+    // Export to SVG functionality
+    exportSVG.addEventListener('click', (e) => {
+        e.stopPropagation();
+        exportToSVG();
+        contextMenu.style.display = 'none';
+        return false;
+    });
+
+    // Export to Glaxnimate RAWR functionality
+    exportRAWR.addEventListener('click', (e) => {
+        e.stopPropagation();
+        exportToRAWR();
+        contextMenu.style.display = 'none';
+        return false;
+    });
+}
+
+function showNotification(message, duration = 3000) {
+    exportNotification.textContent = message;
+    exportNotification.style.display = 'block';
+    
+    setTimeout(() => {
+        exportNotification.style.display = 'none';
+    }, duration);
+}
+
+function exportToPNG() {
+    try {
+        // Try to use the download method first
+        const dataUrl = canvas.toDataURL('image/png');
+        
+        // Check if we're in a sandboxed environment
+        try {
+            const link = document.createElement('a');
+            link.href = dataUrl;
+            link.download = 'loopy-looper.png';
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (e) {
+            // If direct download fails, show the image in a new window
+            const win = window.open();
+            win.document.write(`<img src="${dataUrl}" alt="Loopy Looper">`);
+            showNotification('Right-click and "Save image as..." to download');
+        }
+    } catch (error) {
+        console.error('PNG export failed:', error);
+        showNotification('Export failed. Please try again.');
+    }
+}
+
+function exportToSVG() {
+    try {
+        // Get current values
+        const cwidth = canvas.width;
+        const chwidth = cwidth / 2;
+        const cheight = canvas.height;
+        const chheight = cheight / 2;
+        let angle = -90.0;
+        let position = chwidth;
+        const or = maxr / 100;
+        const ir = or * (minr / 100);
+        const dstep = detail / 10;
+        const iposition = chwidth * or;
+        const fposition = chwidth * ir;
+        
+        // Create an SVG element
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('width', cwidth);
+        svg.setAttribute('height', cheight);
+        svg.setAttribute('viewBox', `0 0 ${cwidth} ${cheight}`);
+        
+        // Calculate color gradient
+        const icolor = hex2rgb(ic);
+        const fcolor = hex2rgb(oc);
+        let r = fcolor.red;
+        let g = fcolor.green;
+        let b = fcolor.blue;
+        const rs = getColorStep(iposition, fposition, r, icolor.red) * (detail / 10);
+        const gs = getColorStep(iposition, fposition, g, icolor.green) * (detail / 10);
+        const bs = getColorStep(iposition, fposition, b, icolor.blue) * (detail / 10);
+        
+        // Calculate the starting point
+        let rad = deg2rad(angle);
+        let x = chwidth + Math.cos(rad) * iposition;
+        let y = chheight + Math.sin(rad) * iposition;
+        let px = x;
+        let py = y;
+        
+        // Create a group for all the path segments
+        const ng = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        
+        // Calculate the path segments
+        for (position = iposition; position > fposition; position -= dstep) {
+            // Calculate the next position
+            rad = deg2rad(angle);
+            x = chwidth + Math.cos(rad) * position;
+            y = chheight + Math.sin(rad) * position;
+            
+            // Create a path for this segment
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            
+            // Set the path data for this segment
+            const pathData = `M ${px} ${py} L ${x} ${y}`;
+            path.setAttribute('d', pathData);
+            path.setAttribute('stroke', rgb2hex(r, g, b));
+            path.setAttribute('stroke-width', lw / 10);
+            path.setAttribute('stroke-linecap', 'round');
+            path.setAttribute('stroke-linejoin', 'round');
+            path.setAttribute('fill', 'none');
+            
+            // Add the path to the group
+            ng.appendChild(path);
+            
+            // Update the previous position
+            px = x;
+            py = y;
+            
+            // Update the angle
+            angle += step;
+            angle -= angle > 360 ? 360 : 0;
+            
+            // Update the color
+            r += rs;
+            r = r > 255 ? 255 : r;
+            r = r < 0 ? 0 : r;
+            g += gs;
+            g = g > 255 ? 255 : g;
+            g = g < 0 ? 0 : g;
+            b += bs;
+            b = b > 255 ? 255 : b;
+            b = b < 0 ? 0 : b;
+        }
+        
+        // Add the group to the SVG
+        svg.appendChild(ng);
+        
+        // Now use the 5-step method to export the SVG
+        // Step 1: Get the SVG element (we already have it)
+        
+        // Step 2: Get SVG source by XMLSerializer
+        const serializer = new XMLSerializer();
+        let source = serializer.serializeToString(svg);
+        
+        // Step 3: Add namespaces
+        if (!source.match(/^<svg[^>]+xmlns="http:\/\/www\.w3\.org\/2000\/svg"/)) {
+            source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+        }
+        if (!source.match(/^<svg[^>]+"http:\/\/www\.w3\.org\/1999\/xlink"/)) {
+            source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
+        }
+        
+        // Add XML declaration
+        source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
+        
+        // Step 4: Construct URL data scheme
+        const url = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(source);
+        
+        // Step 5: Set URL to href attribute of an anchor element
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'loopy-looper.svg';
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        showNotification('SVG exported successfully');
+    } catch (error) {
+        console.error('SVG export failed:', error);
+        showNotification('Export failed. Please try again.');
+    }
+}
+
+function exportToRAWR() {
+}
+
+function deg2rad(deg) {
+    return (deg * Math.PI) / 180.0;
+}
+
+function hex2rgb(hex) {
+    if (hex.substring(0, 1) != "#") return { red: 0, green: 0, blue: 0 };
+    var r = parseInt(hex.substring(1, 3), 16);
+    var g = parseInt(hex.substring(3, 5), 16);
+    var b = parseInt(hex.substring(5, 7), 16);
+    return { red: r, green: g, blue: b };
+}
+
+function rgb2hex(red, green, blue) {
+    var black = "#000000";
+    if (red < 0 || red > 255) return black;
+    if (green < 0 || green > 255) return black;
+    if (blue < 0 || blue > 255) return black;
+    var color = blue | (green << 8) | (red << 16);
+    return "#" + color.toString(16).padStart(6, '0');
+}
+
+function getColorStep(spos, epos, scol, ecol) {
+    var pdif = parseInt(epos) - parseInt(spos);
+    pdif = Math.abs(pdif);
+    var cdif = parseInt(ecol) - parseInt(scol);
+    return cdif / pdif;
+}
+
+function render() {
+    let canvas = GLOBAL.canvas;
+    let context = GLOBAL.context;
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.save();
+    var cwidth = canvas.width;
+    var chwidth = cwidth / 2;
+    var cheight = canvas.height;
+    var chheight = cheight / 2;
+    var angle = -90.0;
+    var position = chwidth;
+    context.strokeStyle = oc;
+    context.lineWidth = lw / 10;
+    context.lineCap = "round";
+    context.lineJoin = "round";
+    context.miterLimit = 700;
+    var or = maxr / 100;
+    var ir = or * (minr / 100);
+    var rad = deg2rad(angle), dstep = detail / 10;
+    var iposition = chwidth * or;
+    var fposition = chwidth * ir;
+    if (delay == 0) {
+        GLOBAL.iteration = 0;
+        GLOBAL.itercap = iposition;
+    }
+    var x = chwidth + Math.cos(rad) * iposition, px = 0;
+    var y = chheight + Math.sin(rad) * iposition, py = 0;
+    var icolor = hex2rgb(oc);
+    var fcolor = hex2rgb(ic);
+    var r = icolor.red;
+    var g = icolor.green;
+    var b = icolor.blue;
+    var rs = getColorStep(iposition, fposition, r, fcolor.red) * (detail / 10);
+    var gs = getColorStep(iposition, fposition, g, fcolor.green) * (detail / 10);
+    var bs = getColorStep(iposition, fposition, b, fcolor.blue) * (detail / 10);
+    for (position = iposition; position > fposition; position -= dstep) {
+        rad = deg2rad(angle);
+        px = x;
+        py = y;
+        x = chwidth + Math.cos(rad) * position;
+        y = chheight + Math.sin(rad) * position;
+        context.beginPath();
+        context.moveTo(px, py);
+        context.lineTo(x, y);
+        context.strokeStyle = rgb2hex(r, g, b);
+        r += rs;
+        r = r > 255 ? 255 : r;
+        r = r < 0 ? 0 : r;
+        g += gs;
+        g = g > 255 ? 255 : g;
+        g = g < 0 ? 0 : g;
+        b += bs;
+        b = b > 255 ? 255 : b;
+        b = b < 0 ? 0 : b;
+        context.stroke();
+        context.moveTo(x, y);
+        angle += step;
+        angle -= angle > 360 ? 360 : 0;
+        GLOBAL.iteration += 1;
+        if (GLOBAL.iteration > GLOBAL.itercap) {
+            break;
+        }
+    }
+    context.restore();
+    if(GLOBAL.timer) {
+        clearTimeout(GLOBAL.timer);
+    }
+    if (position > fposition) {
+        GLOBAL.itercap += 1;
+        GLOBAL.timer = setTimeout(render, parseInt(GLOBAL.delay / 100));
+    }
+    GLOBAL.iteration = 0;
+}
+
+function animate(canvas, context) {
+    GLOBAL.canvas = canvas;
+    GLOBAL.context = context;
+    GLOBAL.iteration = 0;
+    GLOBAL.itercap = 1;
+    let del = 0;
+    if (typeof delay !== 'undefined') {
+        del = delay * 10;
+    }
+    GLOBAL.delay = del;
+    render();
+}
+
+function rerender() {
+    if(context == null) {
+        redraw();
+    }
+    animate(canvas, context);
+}
+
+function redraw() {
+    var canvas = document.getElementById("canvas");
+    var context = canvas.getContext("2d");
+    animate(canvas, context);
+}
+
+function updateValues() {
+    step = parseFloat(document.querySelector('input[name="step"]').value);
+    detail = parseFloat(document.querySelector('input[name="detail"]').value);
+    maxr = parseFloat(document.querySelector('input[name="maxr"]').value);
+    minr = parseFloat(document.querySelector('input[name="minr"]').value);
+    lw = parseFloat(document.querySelector('input[name="lw"]').value);
+    ic = document.querySelector('input[name="ic"]').value;
+    oc = document.querySelector('input[name="oc"]').value;
+    delay = parseFloat(document.querySelector('input[name="delay"]').value);
+    redraw();
+}
+
+function updateDescription(object) {
+    var text = "";
+    if (object == 1) {
+        text = "The angle between vertexes of the loop.(determines the overall shape)";
+    } else if (object == 2) {
+        text = "The decrease in radius per vertex.(the lower the more detailed)";
+    } else if (object == 3) {
+        text = "The radius of the first vertex.";
+    } else if (object == 4) {
+        text = "The radius of the last vertex relative to the first vertex.(can be used to make holes inside the loop)";
+    } else if (object == 5) {
+        text = "Controls how thick the lines are.";
+    } else if (object == 6) {
+        text = "The color of the last vertex.(must be a hex value)";
+    } else if (object == 7) {
+        text = "The color of the first vertex.(must be a hex value)";
+    } else if (object == 8) {
+        text = "The delay of drawing each line. Also affects Glaxnimate RAWR export animation speed.";
+    } else if (object == 9) {
+        text = "Restart Drawing if delay > 0.";
+    } else {
+        text = "Hold your mouse over a control to view its description.";
+    }
+    document.getElementById("description").innerHTML = text;
+}
+
+// Initialize the application when the page loads
+window.addEventListener('DOMContentLoaded', function() {
+    initContextMenu();
+    redraw();
+});
+    </script>
+</body>
+</html>
