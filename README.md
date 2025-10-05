@@ -1,5 +1,5 @@
 # Loopy Looper
-My little pet-project and how I make beautiful shapes. You can find it on my [website](https://hyperagon.github.io/projects/loopylooper/).
+My little pet-project and how I make beautiful shapes. You can find it on my [website](https://hyperagon.github.io/projects/).
 
 ### Features
 - No dependencies (besides a Browser)
