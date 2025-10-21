@@ -15,9 +15,9 @@ Version 4
 - Made in HTML+CSS+Javascript
 - Save as image (default Canvas option)
 
-[Version 5](https://hyperagon.github.io/projects/loopylooper5/)
+[Version 5](https://hyperagon.github.io/projects/loopylooper5/) (LLM couldn't assemble the parts)
 - Animate it using a *delay* slider
 
-[Veraion 6](https://hyperagon.github.io/projects/loopylooper6/) (LLM couldn't assemble the parts)
+[Veraion 6](https://hyperagon.github.io/projects/loopylooper6/)
 - Export to PNG, SVG or RAWR
 - Include animations in RAWR
