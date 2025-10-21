@@ -19,5 +19,5 @@ Version 4
 - Animate it using a *delay* slider
 
 [Veraion 6](https://hyperagon.github.io/projects/loopylooper6/)
-- Export to PNG, SVG or RAWR
-- Include animations in RAWR
+- Export to PNG, SVG, HTML or RAWR
+- Include animations when possible
