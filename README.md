@@ -1,5 +1,5 @@
 # Loopy Looper
-My little pet-project and how I make beautiful shapes. You can find it on my [website](https://hyperagon.github.io/projects/).
+My little pet-project and how I make beautiful shapes. Vibe coded the Export functionality.
 
 ### Features
 - No dependencies (besides a Browser)
